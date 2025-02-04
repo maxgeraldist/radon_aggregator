@@ -149,7 +149,7 @@ try:
                 for f in valid_radon_features
             )
         else:
-            weighted_sum = 0.0
+            weighted_sum: float = 0.0
         mean_value: float = float(weighted_sum if weighted_sum else 0.0)
 
         updates[parish_feature.id()] = {field_idx: mean_value}
@@ -159,10 +159,6 @@ try:
             updates = {}  # Reset dictionary
 
         updated_value = parish_layer.getFeature(parish_feature.id())[field_idx]
-        if i % 100 == 0:
-            print(f"Mean value: {mean_value}")
-            print(f"Updated mean_value for ID {parish_feature.id()}: {updated_value}")
-            print(parish_feature.attribute("Global_Polygon_ID"))
 
     if updates:
         provider.changeAttributeValues(updates)
