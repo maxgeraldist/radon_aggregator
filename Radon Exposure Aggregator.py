@@ -353,8 +353,5 @@ for county_feature in county_layer.getFeatures():
     # Clean up
     QgsProject.instance().removeMapLayer(mask_layer)
 
-    if i == 3:
-        break
-
 timeend = time.time()
 print(f"Total time taken: {timeend - timestart:.2f} seconds")
