@@ -1,7 +1,9 @@
 import os
 from qgis.core import *
 from qgis.PyQt.QtCore import QCoreApplication
+import time
 
+timestart = time.time()
 INPUT_FOLDER = "C:\\Users\\maxge\\Downloads\\London"
 OUTPUT_FOLDER = "C:\\Users\\maxge\\Downloads\\London\\reprojected_layers"
 
@@ -156,7 +158,7 @@ try:
 
         if i % 1000 == 0 and updates:
             provider.changeAttributeValues(updates)
-            updates = {}  # Reset dictionary
+            updates = {}
 
         updated_value = parish_layer.getFeature(parish_feature.id())[field_idx]
 
@@ -193,15 +195,14 @@ parish_layer.setOpacity(1.0)
 
 QgsProject.instance().reloadAllLayers()
 
-# Configure basic layout settings
-layout = QgsLayout(project)
-layout.initializeDefaults()
-page = layout.pageCollection().page(0)
-page.setPageSize("A4", QgsLayoutItemPage.Orientation.Landscape)
-
 
 i = 0
 for county_feature in county_layer.getFeatures():
+    layout = QgsLayout(project)
+    layout.initializeDefaults()
+    page = layout.pageCollection().page(0)
+    page.setPageSize("A4", QgsLayoutItemPage.Orientation.Landscape)
+
     i += 1
     # Mask creation
     mask_layer = QgsVectorLayer("Polygon?crs=EPSG:27700", "mask", "memory")
@@ -249,8 +250,8 @@ for county_feature in county_layer.getFeatures():
     gradient_symbol = QgsFillSymbol()
     gradient_symbol.deleteSymbolLayer(0)  # Remove default simple fill
     gradient_layer = QgsGradientFillSymbolLayer(
-        color_ramp_color1,
         color_ramp_color2,
+        color_ramp_color1,
         gradientType=QgsGradientFillSymbolLayer.Linear,
     )
 
@@ -273,18 +274,20 @@ for county_feature in county_layer.getFeatures():
     )
     layout.addLayoutItem(polygon_item)
     min_label = QgsLayoutItemLabel(layout)
+    layout.addLayoutItem(min_label)
     min_label.setText("0.0")
     min_label.attemptMove(
         QgsLayoutPoint(
             page_width / 10,
             page_height / 10 - (YMAX - YMIN) + page_height * (1 / 100),
-            # If you don't subtract quite a bit, it ends up inside the rectangle - why?
+            # If you don't add quite a bit, it ends up inside the rectangle - why?
             QgsUnitTypes.LayoutMillimeters,
         )
     )
     layout.addLayoutItem(min_label)
 
     max_label = QgsLayoutItemLabel(layout)
+    layout.addLayoutItem(max_label)
     max_label.setText("6.0")
     max_label.attemptMove(
         QgsLayoutPoint(
@@ -293,7 +296,6 @@ for county_feature in county_layer.getFeatures():
             QgsUnitTypes.LayoutMillimeters,
         )
     )
-    layout.addLayoutItem(max_label)
 
     # Scalebar
     scalebar = QgsLayoutItemScaleBar(layout)
@@ -304,21 +306,19 @@ for county_feature in county_layer.getFeatures():
     feature_width_km = (
         county_feature.geometry().boundingBox().width() / 1000.0
     )  # Converts meters to kilometers
-    units_per_segment = (
-        feature_width_km / 5
-    )  # Converts kilometers to hundreds of kilometers
+    units_per_segment = round(feature_width_km / 5, 2)
     scalebar.setUnitsPerSegment(units_per_segment)
     scalebar.setLinkedMap(map_item)
-    scalebar.setUnitLabel("* 5 km")
+    scalebar.setUnitLabel("km")
     scalebar_font = QFont("Arial", 8)
     scalebar.setFont(scalebar_font)
     scalebar.update()
-    layout.addLayoutItem(scalebar)
     scalebar.attemptMove(
         QgsLayoutPoint(
             page_width / 10, page_height * (0.9), QgsUnitTypes.LayoutMillimeters
         )
     )
+    layout.addLayoutItem(scalebar)
 
     # Title
     title = QgsLayoutItemLabel(layout)
@@ -352,3 +352,9 @@ for county_feature in county_layer.getFeatures():
 
     # Clean up
     QgsProject.instance().removeMapLayer(mask_layer)
+
+    if i == 3:
+        break
+
+timeend = time.time()
+print(f"Total time taken: {timeend - timestart:.2f} seconds")
