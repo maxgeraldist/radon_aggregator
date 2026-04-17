@@ -1,6 +1,6 @@
 # Radon Parish Mapping Tool
 
-A QGIS‑based Python script that reprojects geospatial data, computes area‑weighted mean radon levels for each parish, and generates styled county‑wise map layouts automatically.
+A QGIS‑based Python script that reprojects geospatial data, computes area‑weighted mean radon levels for each parish, and generates styled county‑wise map layouts automatically for every county. Works for other areas with two-tiered border layout (e.g. US states and counties) with minimal changes.
 
 ![Example output for a ceremonial county](demo.jpg)
 
