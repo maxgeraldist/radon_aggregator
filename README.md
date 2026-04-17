@@ -38,5 +38,3 @@ This tool processes geographic data for Greater London (or any area with a simil
 - Python libraries: `os`, `time`, `subprocess`.
 
 Ensure that the QGIS Python environment is activated (e.g. by running the script from the QGIS built‑in Python console or with `pyqgis`‑aware launcher).
-
-## Folder Structure
