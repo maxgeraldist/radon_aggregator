@@ -4,8 +4,8 @@ from qgis.PyQt.QtCore import QCoreApplication
 import time
 
 timestart = time.time()
-INPUT_FOLDER = "C:\\Users\\maxge\\Downloads\\London"
-OUTPUT_FOLDER = "C:\\Users\\maxge\\Downloads\\London\\reprojected_layers"
+INPUT_FOLDER = "INPUT PATH"
+OUTPUT_FOLDER = "OUTPUT PATH"
 
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
