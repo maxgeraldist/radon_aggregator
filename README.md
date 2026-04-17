@@ -35,7 +35,7 @@ This tool processes geographic data for Greater London (or any area with a simil
 
 - **QGIS 3.x** (with Python 3) – the script uses `qgis.core`, `qgis.PyQt`, and `processing`.  
 - **GDAL** (for `ogr2ogr` when handling MBTiles).  
-- Python libraries: `os`, `time`, `subprocess` (all standard).
+- Python libraries: `os`, `time`, `subprocess`.
 
 Ensure that the QGIS Python environment is activated (e.g. by running the script from the QGIS built‑in Python console or with `pyqgis`‑aware launcher).
 
